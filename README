@@ -17,4 +17,4 @@ The php API aims at being compatible with the one provided by the C implementati
 
 A comparison between cimpl and native can be found at: http://www.ins.cwi.nl/~gm/bench/
 
-php_test.tar.bz2 - contains an utility to measure the performance of the two php APIS.	
+php_test.tar.bz2 - contains an utility to measure the performance of the two php APIS.

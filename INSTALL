@@ -13,7 +13,7 @@ $ php-config --configure-options
 
 and check for the presence of the "--enable-sockets" option.
 
-In order to enable sockets support in your php interpreter; 
+In order to enable sockets support in your php interpreter;
 load the php_sockets.so library from the php.ini configuration file.
 
 

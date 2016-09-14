@@ -23,7 +23,7 @@
 	{
 		$db = monetdb_connect($lang = "sql", $host = "127.0.0.1", $port = "50000" , $username = "monetdb", $password = "monetdb", $database = "php_demo" )
 		or die(monetdb_last_error());
-		
+
 		$sql = monetdb_escape_string($_POST['query']);
 		$res = monetdb_query($sql);
 		while ( $row = monetdb_fetch_assoc($res) )
@@ -32,7 +32,7 @@
 			print_r($row);
 			print "</pre>\n";
 		}
-		
+
 		monetdb_disconnect();
 	}
 
@@ -42,7 +42,7 @@
 	value=\"{$_POST['query']}\" />\n";
 	print "<input type=\"submit\" value=\"Execute\" />\n";
 	print "</form>\n";
-?>	
+?>
 
 </body>
 
