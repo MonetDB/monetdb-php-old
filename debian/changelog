@@ -1,5 +1,5 @@
-php-monetdb-client (11.25.1) UNRELEASED; urgency=medium
+php-monetdb (1.0) unstable; urgency=low
 
-  * Initial release.
+  * The PHP interface to MonetDB is now a separate package.
 
- -- Sjoerd Mullender <sjoerd@acm.org>  Wed, 14 Sep 2016 16:19:54 +0200
+ -- Sjoerd Mullender <sjoerd@acm.org>  Wed, 14 Sep 2016 15:27:21 +0200

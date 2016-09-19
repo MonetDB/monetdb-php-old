@@ -1,21 +1,25 @@
-Source: php-monetdb-client
-Maintainer: MonetDB BV <info@monetdb.org>
+Source: php-monetdb
 Section: misc
 Priority: optional
-Standards-Version: 3.9.2
-Build-Depends: debhelper (>= 9)
+Maintainer: MonetDB BV <info@monetdb.org>
+Build-Depends: debhelper (>= 9~)
+Standards-Version: 3.9.6
+Vcs-Hg: http://dev.monetdb.org/hg/monetdb-php/
+Vcs-Browser: http://dev.monetdb.org/hg/monetdb-php/
+Homepage: https://www.monetdb.org/
 
-Package: php-monetdb-client
+Package: php-monetdb
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: php-common,
+         ${misc:Depends},
+         ${shlibs:Depends}
 Recommends: monetdb5-sql
 Conflicts: php5-monetdb-client
 Replaces: php5-monetdb-client
-Description: MonetDB PHP client module
+Description: Pure PHP database driver for MonetDB/SQL
  MonetDB is a database management system that is developed from a
  main-memory perspective with use of a fully decomposed storage model,
  automatic index management, extensibility of data types and search
  accelerators.  It also has an SQL frontend.
  .
- This package contains the files needed to use MonetDB from a PHP
- program.
+ This package contains a pure PHP database driver for MonetDB/SQL.

@@ -1,5 +1,5 @@
-Name:		MonetDB-client-php
-Version:	11.25.1
+Name:		php-monetdb
+Version:	1.0
 Release:	1%{?dist}
 Summary:	MonetDB php interface
 Group: Applications/Databases
@@ -10,6 +10,9 @@ Source0:	https://dev.monetdb.org/hg/monetdb-php/archive/v%{version}.tar.bz2
 
 Requires:	php
 BuildArch:	noarch
+
+Obsoletes:	MonetDB-client-php
+Recommends:	MonetDB-SQL-server5
 
 %description
 MonetDB is a database management system that is developed from a
