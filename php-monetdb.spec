@@ -6,9 +6,10 @@ Group: Applications/Databases
 
 License:	MPLv2.0
 URL:		http://www.monetdb.org/
-Source0:	https://dev.monetdb.org/hg/monetdb-php/archive/v%{version}.tar.bz2
+Source0:	http://dev.monetdb.org/php/monetdb-php-%{version}.tar.bz2
 
 Requires:	php
+Requires:	php-sockets
 BuildArch:	noarch
 
 Obsoletes:	MonetDB-client-php
@@ -25,7 +26,7 @@ program.
 
 
 %prep
-%autosetup -n monetdb-php-v%{version}
+%autosetup -n monetdb-php-%{version}
 
 
 %build
