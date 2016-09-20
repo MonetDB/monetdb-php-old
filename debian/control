@@ -10,7 +10,7 @@ Homepage: https://www.monetdb.org/
 
 Package: php-monetdb
 Architecture: all
-Depends: php-common,
+Depends: php-cli,
          php-sockets,
          ${misc:Depends},
          ${shlibs:Depends}

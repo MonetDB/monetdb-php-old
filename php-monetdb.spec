@@ -8,7 +8,7 @@ License:	MPLv2.0
 URL:		http://www.monetdb.org/
 Source0:	http://dev.monetdb.org/php/monetdb-php-%{version}.tar.bz2
 
-Requires:	php
+Requires:	php-cli
 Requires:	php-sockets
 BuildArch:	noarch
 
