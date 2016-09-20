@@ -1,23 +1,23 @@
 <?php
 /**
-   *	Implementation of the MAPI protocol (v9).
-   *
-   *
-   * 	Provides:
-   * -  mapi_query($data) {
-   * -  mapi_store($data) {
-   * -  php_parse_tuples($rows) {
-   * -  mapi_connect() {
-   * -  mapi_authenticate($user, $passwd, $hash, $salt, $dbname) {
-   * -  mapi_read() {
-   * -  mapi_write($msg) {
-   * -  set_timezone() {
-   * -  format_command($cmd) {
-   * -  mapi_connect_proxy() {
-   * -  mapi_open() {
-   * - mapi_close() {
-   *
-**/
+ *	Implementation of the MAPI protocol (v9).
+ *
+ *
+ * 	Provides:
+ * -  mapi_query($data) {
+ * -  mapi_store($data) {
+ * -  php_parse_tuples($rows) {
+ * -  mapi_connect() {
+ * -  mapi_authenticate($user, $passwd, $hash, $salt, $dbname) {
+ * -  mapi_read() {
+ * -  mapi_write($msg) {
+ * -  set_timezone() {
+ * -  format_command($cmd) {
+ * -  mapi_connect_proxy() {
+ * -  mapi_open() {
+ * -  mapi_close() {
+ *
+ **/
 
 	define("MAX_PACKET_SIZE", 8190); // Maximum packet size
 
@@ -91,7 +91,7 @@
 			$handle = array("conn" => "", "header" => array(), "query" => "", "record_set" => array(), "operation" => -1, "last_row" => 0);
 			$handle["conn"] = $conn["id"];
 
-			if ( ($operation = mapi_store($data, $handle)) == FALSE) {
+			if (($operation = mapi_store($data, $handle)) == FALSE) {
 				return FALSE;
 			}
 
@@ -127,7 +127,7 @@
 			mapi_write($socket, format_command("export " . $handle["query"]["id"] . " " . $handle["query"]["index"] . " " . $exp_size));
 			$data = mapi_read($socket);
 
-			if ( ($operation = mapi_store($data, $handle)) == FALSE ) {
+			if (($operation = mapi_store($data, $handle)) == FALSE) {
 				return FALSE;
 			}
 
@@ -150,14 +150,14 @@
 		$rows = ""; // stores (partially) retrieved rows
 		foreach ($data as $row) {
 			/*
-			 	PHP5.2 complains when $row[0] is accessed with:
-
-				Notice: Uninitialized string offset: 0
-
-				In order to avoid the E_NOTICE error substr($row, 0, 1) is used
-				to access the first character of a string
-
-			*/
+			 * PHP5.2 complains when $row[0] is accessed with:
+			 *
+			 * Notice: Uninitialized string offset: 0
+			 *
+			 * In order to avoid the E_NOTICE error
+			 * substr($row, 0, 1) is used to access the
+			 * first character of a string
+			 */
 			if (substr($row, 0, 1) == MSG_QUERY) {
 				if ($row[1] == Q_TABLE) {
 					$operation = Q_TABLE;
@@ -197,10 +197,9 @@
 		}*/
 
 		if ($header != "") {
-
 			$handle["header"] = php_parse_header($header);
 			/* Store the number of fields returned by the dataset */
-		   	if ($operation == Q_TABLE || $operation == Q_BLOCK ) {
+			if ($operation == Q_TABLE || $operation == Q_BLOCK) {
 				$handle["query"]["fields"] = count($handle["header"]["fields"]);
 			}
 		}
@@ -227,7 +226,7 @@
 		foreach ($rows as &$row) {
 
 			$row = ltrim($row, "[ ");
-			$row = explode(",\t",  $row);
+			$row = explode(",\t", $row);
 
 			foreach ($row as &$field) {
 				$field = stripslashes($field);
@@ -243,12 +242,11 @@
 
 	function php_parse_row($row) {
 		$row = ltrim($row, "[ ");
-		$row = explode(",\t",  $row);
+		$row = explode(",\t", $row);
 		foreach ($row as &$field) {
 			if ($field == "NULL") {
 				$field = NULL;
-			}
-			else {
+			} else {
 
 				$field = stripslashes($field);
 				// strip left/right \" chars and right ','
@@ -307,9 +305,9 @@
 		/* No merovingian redirect. Perform an actual connection. */
 		if ($merovingian_iter == NULL) {
 			if (socket_connect($socket, $host, $port) == FALSE) {
-            	$last_error = socket_strerror(socket_last_error());
-              	throw new Exception('Cannot connect to server: ' . $last_error);
-            }
+				$last_error = socket_strerror(socket_last_error());
+				throw new Exception('Cannot connect to server: ' . $last_error);
+			}
 		}
 
 
@@ -349,9 +347,9 @@
 		// not ready to authenticate yet
 			if ($response[0] == MSG_REDIRECT) {
 				$redirects = explode("\n", $response);
-	                 	/* Follow the first redirect */
+				/* Follow the first redirect */
 
-				if ( ($redirects[0] == "") || (substr($redirects[0], 0, 6) != "^mapi:") ) {
+				if (($redirects[0] == "") || (substr($redirects[0], 0, 6) != "^mapi:")) {
 					print "Invalid redirect " . $redirects[0] . "\n";
 					return FALSE;
 				}
@@ -370,10 +368,10 @@
 						return FALSE;
 					}
 				}
-			 	else if($redirect_to['scheme'] == MONETDB ) {
+			 	else if($redirect_to['scheme'] == MONETDB) {
 
 					$options['host'] = $redirect_to['host'];
-					$options['port']     = $redirect_to['port'];
+					$options['port'] = $redirect_to['port'];
 					$options['database'] = ltrim($redirect_to['path'], '/');
 
 					socket_close($socket);
@@ -382,11 +380,10 @@
 						return FALSE;
 					}
 
-			    } else {
+				} else {
 					print $response;
 					return FALSE;
 				}
-
 			} else if ($response[0] == MSG_INFO) {
 				$last_error = $response;
 				return FALSE;
@@ -399,7 +396,7 @@
 	/* Hash function names have to be uppercase */
 	function mapi_authenticate_v9($socket, $user, $passwd, $hash, $algos, $salt, $dbname, $pwhash) {
 		$auth_string = "";
-		if ( (is_array($algos) && (! in_array(strtoupper($hash), $algos)) )  ) 			 {
+		if (is_array($algos) && !in_array(strtoupper($hash), $algos)) {
 			$last_error = "Hash function " . $hash . " not supported";
 			return FALSE;
 		}
@@ -415,7 +412,7 @@
 	// decode the header and get the requested amount of data
 	function mapi_read($socket=NULL) {
 		# get the first 2 bytes
-		if ( ($header = socket_read($socket, 2)) == FALSE) {
+		if (($header = socket_read($socket, 2)) == FALSE) {
 			$last_error = socket_strerror(socket_last_error());
 			throw new Exception('Lost connection with the server: ' . $last_error);
 		}
@@ -428,17 +425,17 @@
 		}
 
 
-		while ((ord($header[0]) & 1) == 0 ) {
-			if ( ($header = socket_read($socket, 2)) == FALSE) {
+		while ((ord($header[0]) & 1) == 0) {
+			if (($header = socket_read($socket, 2)) == FALSE) {
 				$last_error = socket_strerror(socket_last_error());
 				throw new Exception('Lost connection with the server: ' . $last_error);
 			}
 
-			$chunk_size = ( ((ord($header[1]))  << 7) | (ord($header[0]) >> 1) );
+			$chunk_size = ((ord($header[1])) << 7) | (ord($header[0]) >> 1);
 
 			$block = "";
 			while (strlen($block) < $chunk_size) {
-				if ( ($block .= socket_read($socket, $chunk_size - strlen($block))) == FALSE) {
+				if (($block .= socket_read($socket, $chunk_size - strlen($block))) == FALSE) {
 					$last_error = socket_strerror(socket_last_error());
 					throw new Exception('Lost connection with the server: ' . $last_error);
 				}
@@ -470,11 +467,11 @@
 
 		$is_final = FALSE;
 		while (! $is_final) {
-			$data  = substr($msg, $pos, min(MAX_PACKET_SIZE, (strlen($msg) - $pos))  );
+			$data = substr($msg, $pos, min(MAX_PACKET_SIZE, strlen($msg) - $pos));
 			$pos += strlen($data);
 
 			$end = 0; // more packets will follow
-			if ( (strlen($msg) - $pos) == 0) {
+			if ((strlen($msg) - $pos) == 0) {
 				$is_final = TRUE;
 				$end = 1;
 			}
@@ -482,11 +479,12 @@
 			$fb = (strlen($data) << 1) | $end;
 
 			/**
-			  * socket_write() does not guarantee all data to be transmitted.
-			  * Make sure that the buffer is flushed.
-			*/
+			 * socket_write() does not guarantee all data
+			 * to be transmitted.  Make sure that the
+			 * buffer is flushed.
+			 */
 
-			if ( ($buf = socket_flush($socket, pack("v", $fb) . $data)) == FALSE) {
+			if (($buf = socket_flush($socket, pack("v", $fb) . $data)) == FALSE) {
 				$last_error = socket_strerror(socket_last_error());
 				return -1;
 			}
@@ -528,15 +526,18 @@
 		$merovingian_iter = 0;
 
 		/**
-		  * When connecting, the function would first try to find a (persistent) link that's already
-		  * open with the same host, username and password. If one is found, an identifier for it will be returned
-		  * instead of opening a new connection.
-		  * TODO: move this check to mapi_connect() to deal with options arrays rewritten by redirects.
-		*/
+		 * When connecting, the function would first try to
+		 * find a (persistent) link that's already open with
+		 * the same host, username and password. If one is
+		 * found, an identifier for it will be returned
+		 * instead of opening a new connection.  TODO: move
+		 * this check to mapi_connect() to deal with options
+		 * arrays rewritten by redirects.
+		 */
 		if ($options['persistent'] == TRUE) {
 			if (count($connection_pool) > 0) {
 				foreach ($connection_pool as $conn) {
-					if ( ($conn["persistent"] == TRUE) && ($conn["dbname"] == $options['database']) && ($conn['username'] == $options['username']) && ($conn["password"] == hash($options['hashfunc'], $options['password']) && ($conn['host']) == $options['host']) && ( $conn['port'] == $options['port'] ) ) {
+					if (($conn["persistent"] == TRUE) && ($conn["dbname"] == $options['database']) && ($conn['username'] == $options['username']) && ($conn["password"] == hash($options['hashfunc'], $options['password']) && ($conn['host']) == $options['host']) && ($conn['port'] == $options['port'])) {
 						return $conn;
 					}
 				}
@@ -545,30 +546,37 @@
 
 		$socket	= mapi_open();
 
-		if ( mapi_connect($socket, $options, $merovingian_iter) == TRUE ) {
+		if (mapi_connect($socket, $options, $merovingian_iter) == TRUE) {
 			/* Connected */
 
 			// Create a new connection instance and insert an entry in the connections table
 			$id = mapi_generate_id();
 			if ($options['lang'] == LANG_SQL) {
-
-
 				/*
-					PHP requires a timezone to be specified in the configuration environment; if not specified
-					either in php.ini or via date_default_timezone_set(), a default is set 'Europe/Berlin'.
-
-					PHP complains in case we query the OS to get system's timezone (E_STRICT error).
-
-					To avoid unexpected behaviours and warnings at execution time we set a timezone on mserver
-					only if PHP interpreter is aware of it (php.ini contains a date.timezone entry).
-				*/
+				 * PHP requires a timezone to be
+				 * specified in the configuration
+				 * environment; if not specified
+				 * either in php.ini or via
+				 * date_default_timezone_set(), a
+				 * default is set 'Europe/Berlin'.
+				 *
+				 * PHP complains in case we query the
+				 * OS to get system's timezone
+				 * (E_STRICT error).
+				 *
+				 * To avoid unexpected behaviours and
+				 * warnings at execution time we set a
+				 * timezone on mserver only if PHP
+				 * interpreter is aware of it (php.ini
+				 * contains a date.timezone entry).
+				 */
 				if (ini_get("date.timezone")) {
 					set_timezone($socket); // set the timezone according to the system's configuration
 				}
 
 				// export the reply size (max number of tuples returned at query executions)
 				mapi_write($socket, format_command("reply_size " . REPLY_SIZE));
-				if (strlen($response = mapi_read($socket)) > 0 ) {
+				if (strlen($response = mapi_read($socket)) > 0) {
 					// something went wrong
 					$last_error = $response;
 					return FALSE;
@@ -610,9 +618,8 @@
 			}
 			if ($res != NULL) {
 				if (!is_array($res['query']) ||
-					!array_key_exists('id', $res['query']) ||
-					mapi_free_result($conn['id'], $res['query']['id']))
-			   	{
+				    !array_key_exists('id', $res['query']) ||
+				    mapi_free_result($conn['id'], $res['query']['id'])) {
 					return TRUE;
 				}
 			}
@@ -666,10 +673,12 @@
 			socket_close($socket);
 
 			/* remove the $conn from the pool */
-			// Create anonymous callback function to filter results for connection.
-			$function_body = 'return ( $input[\'id\'] != "'.$conn["id"].'" );';
+			// Create anonymous callback function to
+			// filter results for connection.
+			$function_body = 'return ($input[\'id\'] != "'.$conn["id"].'");';
 			$function_name = create_function('$input', $function_body);
-			// Filter the results array using the anonymous callback function.
+			// Filter the results array using the
+			// anonymous callback function.
 			$connection_pool = array_filter($connection_pool, $function_name);
 
 			if (isset($conn)) {
@@ -725,14 +734,14 @@
 
 		$connections = array();
 		if ($connection_pool !== null) {
-		    foreach($connection_pool as $conn) {
-			$connections[] = $conn["id"];
-		    }
+			foreach($connection_pool as $conn) {
+				$connections[] = $conn["id"];
+			}
 		}
 
 		$id = hash("sha1", time());
 		if (count($connections) > 0) {
-			while (in_array($id, $connections) ) {
+			while (in_array($id, $connections)) {
 				$id = hash("sha1", time());
 			}
 		}
@@ -749,7 +758,8 @@
 		return FALSE;
 	}
 
-	/* Write data through a socket; make sure that the buffer is actually flushed */
+	/* Write data through a socket; make sure that the buffer is
+	 * actually flushed */
 	function socket_flush($socket, $data) {
 		$buf = 0;
 		$bytes = strlen($data);
@@ -758,7 +768,7 @@
 			return FALSE;
 		}
 
-		while ( ($bytes - $buf) > 0 ) {
+		while (($bytes - $buf) > 0) {
 			$buf += socket_write($socket, substr($data, $buf, $bytes), $bytes - $buf);
 			//print "Buf: " . $buf . "\n";
 
@@ -776,50 +786,52 @@
 		$index = 0; // current position in the original string
 		$t = 0; // current position in the quoted string
 
-		/* Parse the original string character by character and copy it in a new buffer escaping characters */
-        while ($size < 0 ? $quoted_string[$t] : $size > 0) {
-                if ($size > 0)
-                        $size--;
-                switch ($string[$index]) {
-                	case '\n':
-                        $quoted_string[$t++] = '\\';
-                        $quoted_string[$t++] = 'n';
-                        break;
-                	case '\t':
-                        $quoted_string[$t++] = '\\';
-                        $quoted_string[$t++] = 't';
-                        break;
-                	case PLACEHOLDER:
-                        $quoted_string[$t++] = '\\';
-                        $quoted_string[$t++] = PLACEHOLDER;
-                        break;
-                	case '\\':
-                        $quoted_string[$t++] = '\\';
-                        $quoted_string[$t++] = '\\';
-                        break;
-                	case '\'':
-                        $quoted_string[$t++] = '\'';
-                       break;
-                	case '\"':
-                        $quoted_string[$t++] = '\\';
-                        $quoted_string[$t++] = '"';
-                        break;
-                	case '\0':
-                        $quoted_string[$t++] = '\\';
-                        $quoted_string[$t++] = '0';
-                        break;
-                default:
-                        $quoted_string[$t++] = $string[$index];
-                        break;
-                }
-                $index++;
-                /* also deal with binaries */
-        }
+		/* Parse the original string character by character
+		 * and copy it in a new buffer escaping characters */
+
+		while ($size < 0 ? $quoted_string[$t] : $size > 0) {
+			if ($size > 0)
+				$size--;
+			switch ($string[$index]) {
+			case '\n':
+				$quoted_string[$t++] = '\\';
+				$quoted_string[$t++] = 'n';
+				break;
+			case '\t':
+				$quoted_string[$t++] = '\\';
+				$quoted_string[$t++] = 't';
+				break;
+			case PLACEHOLDER:
+				$quoted_string[$t++] = '\\';
+				$quoted_string[$t++] = PLACEHOLDER;
+				break;
+			case '\\':
+				$quoted_string[$t++] = '\\';
+				$quoted_string[$t++] = '\\';
+				break;
+			case '\'':
+				$quoted_string[$t++] = '\'';
+				break;
+			case '\"':
+				$quoted_string[$t++] = '\\';
+				$quoted_string[$t++] = '"';
+				break;
+			case '\0':
+				$quoted_string[$t++] = '\\';
+				$quoted_string[$t++] = '0';
+				break;
+			default:
+				$quoted_string[$t++] = $string[$index];
+				break;
+			}
+			$index++;
+			/* also deal with binaries */
+		}
 
 		if (is_array($quoted_string)) {
 			$quoted_string = implode($quoted_string);
 		}
-        return $quoted_string;
+		return $quoted_string;
 	}
 
 ?>
