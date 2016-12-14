@@ -13,7 +13,10 @@ Requires:	php-sockets
 BuildArch:	noarch
 
 Obsoletes:	MonetDB-client-php
+%if (0%{?fedora} >= 22)
+# no recommendations on old Fedora or RHEL
 Recommends:	MonetDB-SQL-server5
+%endif
 
 %description
 MonetDB is a database management system that is developed from a
