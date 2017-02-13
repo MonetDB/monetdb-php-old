@@ -1,6 +1,6 @@
 Name:		php-monetdb
 Version:	1.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	MonetDB php interface
 Group: Applications/Databases
 
@@ -41,7 +41,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
-%license license.txt
+%license COPYING
 %defattr(-,root,root)
 %dir %{_datadir}/php/monetdb
 %{_datadir}/php/monetdb/*
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Sep 14 2016 Sjoerd Mullender <sjoerd@acm.org>
+* Mon Feb 13 2017 Sjoerd Mullender <sjoerd@acm.org> - 1.0-2
+- Added full license text.
+
+* Wed Sep 14 2016 Sjoerd Mullender <sjoerd@acm.org> - 1.0-1
 - Initial independent version.
 
