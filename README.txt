@@ -9,9 +9,9 @@ The php API aims at being compatible with the one provided by the C implementati
 
  - examples/simple_query.php - an example of php+monetdb in action
 
- - INSTALL - note about installing and using the native interface
+ - INSTALL.txt - note about installing and using the native interface
 
- - TODO: list of pending tasks.
+ - TODO.txt: list of pending tasks.
 
 == Benchmark ==
 

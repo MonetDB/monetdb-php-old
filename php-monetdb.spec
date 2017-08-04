@@ -1,6 +1,6 @@
 Name:		php-monetdb
 Version:	1.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	MonetDB php interface
 Group: Applications/Databases
 
@@ -41,7 +41,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
-%license COPYING
+%license COPYING.txt
 %defattr(-,root,root)
 %dir %{_datadir}/php/monetdb
 %{_datadir}/php/monetdb/*
